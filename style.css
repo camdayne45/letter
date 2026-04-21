@@ -1,0 +1,198 @@
+:root {
+    --env-color: #d81b60;
+    --flap-color: #f48fb1;
+    --paper-white: #ffffff;
+    --heart-red: #ff4081;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle, #ffafbd, #ffc3a0);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Quicksand', sans-serif;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Phong bì */
+.envelope-wrapper {
+    position: relative;
+    width: 300px;
+    height: 200px;
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: var(--env-color);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 10;
+}
+
+.flap {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 100px solid var(--flap-color);
+    transform-origin: top;
+    transition: transform 0.5s ease, z-index 0.5s;
+    z-index: 13;
+}
+
+.front {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 150px solid #f06292;
+    border-right: 150px solid #f06292;
+    border-bottom: 100px solid #ec407a;
+    border-top: 100px solid transparent;
+    z-index: 14;
+}
+
+/* Lá thư */
+.letter {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    width: 280px;
+    height: 180px;
+    background: var(--paper-white);
+    z-index: 12;
+    transition: transform 0.8s ease, z-index 0.8s, height 0.5s;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.letter-content {
+    font-family: 'Dancing Script', cursive;
+    color: #444;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.letter-title { color: #d81b60; margin-top: 0; font-size: 1.2rem; }
+.letter-text { font-size: 0.8rem; line-height: 1.4; }
+.letter-footer { text-align: right; font-weight: bold; font-size: 0.9rem; margin-top: 10px; }
+
+/* Khi mở thư */
+.envelope-wrapper.open .flap {
+    transform: rotateX(180deg);
+    z-index: 11;
+}
+
+.envelope-wrapper.open .letter {
+    /* Đẩy lên cao vừa phải */
+    transform: translateY(-160px) scale(1.4); 
+    z-index: 20;
+    
+    /* CHIỀU NGANG: Tăng từ 280px lên 450px để thư rộng ngang ra */
+    width: 450px; 
+    
+    /* Căn chỉnh lại vị trí để lá thư nằm chính giữa khi mở rộng ngang */
+    left: -75px; /* (450px - 300px) / 2 = 75px, để cân bằng với phong bì 300px */
+    
+    /* Chiều dọc giữ ở mức vừa phải */
+    height: 300px; 
+    
+    overflow-y: auto;
+    padding: 30px;
+    box-sizing: border-box;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    transition: all 0.8s ease;
+}
+
+/* Phóng to dòng "Gửi cậu..." như Hoàng muốn */
+.letter-title { 
+    color: #d81b60; 
+    margin-top: 0;
+    font-size: 2.2rem; /* Chữ to nổi bật */
+    font-family: 'Dancing Script', cursive;
+}
+
+.letter-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.envelope-wrapper.open .letter-content {
+    opacity: 1;
+    transition-delay: 0.5s;
+}
+
+/* Hoa trang trí 4 góc */
+.flower {
+    position: absolute;
+    width: 220px; /* Tăng kích thước hoa cho nổi bật */
+    z-index: 5;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+}
+.f-top-left { top: -40px; left: -40px; transform: rotate(-15deg); }
+.f-top-right { top: -40px; right: -40px; transform: rotate(75deg); }
+.f-bottom-left { bottom: -40px; left: -40px; transform: rotate(-105deg); }
+.f-bottom-right { bottom: -40px; right: -40px; transform: rotate(165deg); }
+
+/* Hiệu ứng trái tim */
+.hearts-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.heart {
+    position: absolute;
+    background-color: var(--heart-red);
+    width: 15px;
+    height: 15px;
+    transform: rotate(-45deg);
+    opacity: 0;
+}
+.heart::before, .heart::after {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--heart-red);
+    border-radius: 50%;
+}
+.heart::before { top: -7.5px; left: 0; }
+.heart::after { left: 7.5px; top: 0; }
+
+@keyframes heartFly {
+    0% { transform: translate(0,0) rotate(-45deg) scale(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) rotate(-45deg) scale(1.5); opacity: 0; }
+}
+
+.hint {
+    position: absolute;
+    bottom: -60px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
